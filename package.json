@@ -1,0 +1,13 @@
+{
+  "name": "word-jumper",
+  "main": "./lib/word-jumper",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Move the cursor by each hill on camelCase",
+  "repository": "https://github.com/ajile/word-jumper",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.60.0"
+  },
+  "dependencies": {}
+}
