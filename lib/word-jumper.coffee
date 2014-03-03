@@ -13,12 +13,12 @@ DEBUG = false
 directions = {RIGHT: 1, LEFT: 2}
 
 ###
-# The regular expression describe 'stop' symbols. RegExp applies for each letter
+# The string contains 'stop' symbols. In this string searching each letter
 # of the caret-line. Can be customized for language needs in plugin setting.
 # @readonly
-# @type {RegExp}
+# @type {String}
 ###
-exp = /[A-Z\s\.\{\}\(\)\[\]\?\-\`\~\"\'_]/
+defaultStopSymbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890 {}()[]?-`~\"'._=:;%|/\\"
 
 ###
 # Returns current editor.
@@ -27,9 +27,16 @@ exp = /[A-Z\s\.\{\}\(\)\[\]\?\-\`\~\"\'_]/
 getEditor = -> atom.workspaceView.getActiveView()?.editor
 
 ###
+# Returns stop symbols from the local settings or local scope.
+# @return {String}
+###
+getStopSymbols = -> atom.config.get("word-jumper")?.stopSymbols || defaultStopSymbols
+
+###
 # Function returns sequence number of the first founded symbol in the
-# gived string. Using proprety `stopSympolsExp` of the plugin settings.
-# @param {String} text - string in which searched substring
+# gived string. Using proprety `stopSymbols` of the plugin settings.
+# @param {String} text          - string in which searched substring
+# @param {String} stopSymbols   -
 # @example
 # findBreakSymbol("theCamelCaseString");   // returns 3
 # @example
@@ -38,10 +45,10 @@ getEditor = -> atom.workspaceView.getActiveView()?.editor
 # findBreakSymbol("somestring");   // returns 11
 # @return {Number}   - position of the first founded 'stop' symbol.
 ###
-findBreakSymbol = (text, expr) ->
-  expr = expr || atom.config.getPositiveInt('word-jumper.stopSympolsExp', exp)
+findBreakSymbol = (text, symbols) ->
+  symbols = symbols || getStopSymbols()
   for letter, i in text
-    return i if expr.test(letter) and i != 0
+    return i if symbols.indexOf(letter) != -1 and i != 0
   return text.length
 
 ###
@@ -52,7 +59,6 @@ findBreakSymbol = (text, expr) ->
 # @param {Boolean} selection                        - selected range object
 ###
 move = (cursor, direction, select, selection=false) ->
-
   DEBUG && console.group "Moving cursor #%d", cursor.marker.id
 
   # Getting cursor's line number
@@ -93,7 +99,7 @@ move = (cursor, direction, select, selection=false) ->
   # Search first symbol and move cursor there
   if cursor.isAtBeginningOfLine() and direction == directions.RIGHT
     if !cursor.isInsideWord()
-      offset = findBreakSymbol _text, /[a-zA-Z0-9_]/
+      offset = findBreakSymbol _text, getStopSymbols().replace(/\s/, '') + "abcdefghijklmnopqrstuvwxyz"
 
   # If cursor at the end of the line, move cursor to the below line
   if cursor.isAtEndOfLine() and direction == directions.RIGHT
@@ -103,7 +109,6 @@ move = (cursor, direction, select, selection=false) ->
   DEBUG && console.debug "Position %dx%d", row, column
   DEBUG && console.debug "Text %c[%s………%s]", "font-weight:900", textLeft, textRight
   DEBUG && console.debug "Offset by", offset
-
 
   cursorPoint = [row, column + offset]
 
@@ -120,7 +125,7 @@ move = (cursor, direction, select, selection=false) ->
 ###
 # Function iterate the list of cursors and moves each of them in
 # required direction considering spec. symbols desribed by
-# `stopSympolsExp` setting variable.
+# `stopSymbols` setting variable.
 # @param {Number} direction - movement direction
 # @param {Boolean} select   - move cursor with selection
 ###
@@ -130,7 +135,7 @@ moveCursors = (direction, select) ->
 
 module.exports =
   configDefaults:
-    stopSympolsExp: exp
+    stopSymbols: defaultStopSymbols
 
   activate: ->
     atom.workspaceView.command 'word-jumper:move-right', ->
