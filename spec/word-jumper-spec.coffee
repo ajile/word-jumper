@@ -24,15 +24,15 @@ describe "LineJumper", ->
     it "moves right 13-times", ->
       atom.workspaceView.trigger 'word-jumper:move-right' for [1..13]
       pos = editor.getCursorBufferPosition()
-      expect(pos).toEqual [0,42]
+      expect(pos).toEqual [0,40]
 
-    it "moves right 14-times", ->
-      atom.workspaceView.trigger 'word-jumper:move-right' for [1..14]
+    it "moves right 16-times", ->
+      atom.workspaceView.trigger 'word-jumper:move-right' for [1..16]
       pos = editor.getCursorBufferPosition()
       expect(pos).toEqual [1,0]
 
-    it "moves right 18-times and left 3-times", ->
-      atom.workspaceView.trigger 'word-jumper:move-right' for [1..18]
+    it "moves right 20-times and left 3-times", ->
+      atom.workspaceView.trigger 'word-jumper:move-right' for [1..20]
       atom.workspaceView.trigger 'word-jumper:move-left' for [1..3]
       pos = editor.getCursorBufferPosition()
       expect(pos).toEqual [1,3]
@@ -41,7 +41,7 @@ describe "LineJumper", ->
       atom.workspaceView.trigger 'word-jumper:move-right' for [1..15]
       atom.workspaceView.trigger 'word-jumper:move-left' for [1..3]
       pos = editor.getCursorBufferPosition()
-      expect(pos).toEqual [0,40]
+      expect(pos).toEqual [0,36]
 
     it "selectes right 2-times", ->
       atom.workspaceView.trigger 'word-jumper:select-right' for [1..2]
