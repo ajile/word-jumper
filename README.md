@@ -1,12 +1,14 @@
 Word Jumper package
 ===========
 
-Provides ability to jump camelCase hills using:
+Provides ability to jump into camelCase words using:
 
-* `ctrl-alt-right` - to move caret to the right
-* `ctrl-alt-left` - to move caret to the left
+* `ctrl-alt-right` - to move cursor(s) right
+* `ctrl-alt-left` - to move cursor(s) left
+* `shift-ctrl-alt-left` - to move cursor(s) left with selection
+* `shift-ctrl-alt-right` - to move cursor(s) right with selection
 
-Under construction:
+In action:
+![omgwhoa][gif]
 
-* ~~`shift-ctrl-alt-left` - to move caret to the left with selection~~
-* ~~`shift-ctrl-alt-right` - to move caret to the right with selection~~
+[gif]: https://f.cloud.github.com/assets/1847542/2308286/65af7960-a2bb-11e3-9527-0cb09716f709.gif
