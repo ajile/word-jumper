@@ -24,7 +24,7 @@ defaultStopSymbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890 {}()[]?-`~\"'._=:;%|
 # Returns current editor.
 # @return {atom#workspaceView#Editor}
 ###
-getEditor = -> atom.workspaceView.getActiveView()?.editor
+getEditor = -> atom.workspace.getActiveTextEditor()
 
 ###
 # Returns stop symbols from the local settings or local scope.
@@ -134,18 +134,21 @@ moveCursors = (direction, select) ->
   move cursor, direction, select, selections[i] for cursor, i in getEditor()?.getCursors()
 
 module.exports =
-  configDefaults:
-    stopSymbols: defaultStopSymbols
+  config:
+    stopSymbols:
+      type: 'string'
+      default: defaultStopSymbols
 
   activate: ->
-    atom.workspaceView.command 'word-jumper:move-right', ->
-      moveCursors?directions.RIGHT
+    atom.commands.add 'atom-workspace',
+      'word-jumper:move-right': ->
+        moveCursors?directions.RIGHT
 
-    atom.workspaceView.command 'word-jumper:move-left', ->
-      moveCursors?directions.LEFT
+      'word-jumper:move-left': ->
+        moveCursors?directions.LEFT
 
-    atom.workspaceView.command 'word-jumper:select-right', ->
-      moveCursors?directions.RIGHT, true
+      'word-jumper:select-right': ->
+        moveCursors?directions.RIGHT, true
 
-    atom.workspaceView.command 'word-jumper:select-left', ->
-      moveCursors?directions.LEFT, true
+      'word-jumper:select-left': ->
+        moveCursors?directions.LEFT, true
