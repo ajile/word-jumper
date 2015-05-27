@@ -1,4 +1,4 @@
-'.editor':
+'atom-text-editor':
   'ctrl-alt-right': 'word-jumper:move-right'
   'ctrl-alt-left': 'word-jumper:move-left'
 
